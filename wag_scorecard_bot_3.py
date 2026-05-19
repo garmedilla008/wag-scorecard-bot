@@ -14,7 +14,7 @@ BOT_TOKEN    = "8366999615:AAHYwtvRBfqu_fjy5enmirCWHME9Hwa0R0s"
 CHAT_ID      = "-1003964887511"
 TWELVEDATA_KEY = "5341e7faae4548bb9e1950b652d54e87"
 
-POST_TIMES = ["00:00", "04:00", "08:00", "12:00", "16:00", "20:00"]
+POST_TIMES = ["00:00", "02:00", "04:00", "06:00", "08:00", "10:00", "12:00", "14:00", "16:00", "18:00", "20:00", "22:00"]
 
 # ─────────────────────────────────────────────
 # PAIRS
@@ -155,7 +155,7 @@ def build_message(scores):
 # ─────────────────────────────────────────────
 def send_to_telegram(message):
     url = f"https://api.telegram.org/bot{BOT_TOKEN}/sendMessage"
-    r = requests.post(url, json={"chat_id": CHAT_ID, "text": message}, timeout=10)
+    r = requests.post(url, json={"chat_id": CHAT_ID, "text": message}, timeout=60)
     if r.status_code == 200:
         print("\nScorecard posted to Telegram!")
     else:
