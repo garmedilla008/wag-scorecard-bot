@@ -141,7 +141,7 @@ def fmt(val):
 
 def build_message(scores):
     now = datetime.now().strftime("%Y.%m.%d %H:%M")
-    lines = ["==WAGFOREX SCORECARD==", f"Time: {now}", ""]
+    lines = ["📊 Score Bias", f"Time: {now}", ""]
     for currency in CURRENCIES:
         tf = scores[currency]
         lines.append(currency)
