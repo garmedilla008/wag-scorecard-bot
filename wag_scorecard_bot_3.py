@@ -139,6 +139,26 @@ def calculate_scores():
 def fmt(val):
     return f"+{val}" if val > 0 else str(val)
 
+def get_gold_bias(timeframe):
+    cfg = TIMEFRAMES[timeframe]
+    result = fetch_candles("XAU", "USD", cfg["interval"], cfg["outputsize"])
+    if result is None:
+        return 0
+    closes, opens = result
+    if len(closes) < SMA_PERIOD + 1:
+        return 0
+    last_close = closes[-1]
+    last_open  = opens[-1]
+    last_sma   = sma(closes, SMA_PERIOD)
+    if last_sma is None:
+        return 0
+    if last_close > last_open and last_close > last_sma:
+        return 1
+    elif last_close < last_open and last_close < last_sma:
+        return -1
+    else:
+        return 0
+
 def build_message(scores):
     now = datetime.now().strftime("%Y.%m.%d %H:%M")
     lines = ["📊 Score Bias", f"Time: {now}", ""]
@@ -147,6 +167,14 @@ def build_message(scores):
         lines.append(currency)
         lines.append(f"D1: {fmt(tf['D1'])}  |  H4: {fmt(tf['H4'])}  |  H1: {fmt(tf['H1'])}")
         lines.append("")
+
+    # Gold scores
+    gold_d1 = get_gold_bias("D1")
+    gold_h4 = get_gold_bias("H4")
+    gold_h1 = get_gold_bias("H1")
+    lines.append("🥇 XAUUSD")
+    lines.append(f"D1: {fmt(gold_d1)}  |  H4: {fmt(gold_h4)}  |  H1: {fmt(gold_h1)}")
+    lines.append("")
     lines.append("Bias: +1 Bullish | 0 Neutral | -1 Bearish")
     return "\n".join(lines)
 
